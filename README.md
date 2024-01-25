@@ -1,4 +1,4 @@
-# Project descriptopm
+# Project description
 This GitHub repository contains code used for an fMRI study of the production effect, conducted at Dalhousie University between November 2021 and March 2022. This code is indended to be used in conjunction with data and assets from the same study, stored here [provide OSF link].
 
 This study involved two experiments, which were dubbed _PE_ and _quickread_ respectively. PE is short for "production effect"; this experiment was a modified version of the paradigm from [Bailey et al. (2021)][1], specifically intended for multivariate analysis. The quickread experiment was a shortened version of the study phase from the PE experiment with more rapid trial presentation. These two experiments are related; however, data from each has been analyzed and written up independently. 
