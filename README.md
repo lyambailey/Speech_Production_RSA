@@ -9,7 +9,7 @@ For the most part, files pertaining to each experiment are stored in separate su
 This project uses the following directory structure. All folders described below should be downloaded (either from this repo or from GitHub) and placed in the same directory.
 
 ### scripts 
-Contains all scripts for data preprocessing and analysis. More detail is provided in 'scripts_README', located in the scripts folder
+Contains all scripts for data preprocessing and analysis. More detail is provided in the README within the scripts folder
 
 ### MRIdata
 Contains preprocessed fMRI data (4D functional images from each experiment) and brain-extracted T1 images from each subject. Note that data from 12 subjects are available in this repo.
