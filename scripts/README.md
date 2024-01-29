@@ -9,11 +9,10 @@ Within each subfolder, scripts are numbered in the order in which they should be
 Version #'s indicate the versions with which this code was developed. The code might not run as intended on more recent versions.
 
 - FSL 6.0
-- MATLAB R2020b <br>
-    **MATLAB dependencies not included in base installation:**
+- MATLAB R2020b (dependencies not included in the base installation are listed below):
   - CoSMoMVPA (https://cosmomvpa.org/download.html)
-- Python / Anaconda 3 <br>
-    **Python dependencies not included in base installation**:
+    
+- Python / Anaconda 3 (dependencies not included in the base installation are listed below):
   - corpustools v1.4.0 (https://phonologicalcorpustools.github.io/CorpusTools/)
   - gensim v4.0.1 (https://pypi.org/project/gensim/)
   - imageio v2.9.0 (https://pypi.org/project/imageio/)
