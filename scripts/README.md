@@ -27,3 +27,6 @@ Version #'s indicate the versions with which this code was developed. The code m
     
 - shell
   - GNUparallel (https://www.gnu.org/software/parallel/)
+ 
+- Surf Ice (https://www.nitrc.org/projects/surfice/)
+- MRIcroGL (https://www.nitrc.org/projects/mricrogl)
