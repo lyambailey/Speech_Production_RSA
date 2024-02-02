@@ -9,8 +9,10 @@ Within each subfolder, scripts are numbered in the order in which they should be
 Version #'s indicate the versions with which this code was developed. The code might not run as intended on more recent versions.
 
 - FSL 6.0
+- Advanced Normalization Tools (http://stnava.github.io/ANTs/)
 - MATLAB R2020b (dependencies not included in the base installation are listed below):
   - CoSMoMVPA (https://cosmomvpa.org/download.html)
+  - bayesFactor (https://github.com/klabhub/bayesFactor)
     
 - Python / Anaconda 3 (dependencies not included in the base installation are listed below):
   - corpustools v1.4.0 (https://phonologicalcorpustools.github.io/CorpusTools/)
