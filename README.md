@@ -8,7 +8,7 @@ This project uses the following directory structure. All folders described below
 
 `scripts`: **[This folder is included in this repository]** Contains all scripts for data preprocessing and analysis. More detail is provided in the README within the scripts folder. 
 
-`MRIdata`: **[This folder is included in the OSF repository]** Contains preprocessed fMRI data (4D functional images from each experiment) and brain-extracted T1 images from each subject. Note that data from 12 subjects are available in this repo.
+`MRIdata`: **[This folder is included in the OSF repository]** Contains preprocessed fMRI data (4D functional images from each experiment) and brain-extracted T1 images from twelve subjects who consented to their anonymized data being made publicly accessible. 
 
 `MRIanalyses`: **[This folder is included in the OSF repository]** Contains all assets required for the analysis scripts stored in `scripts`. This folder also serves as the main output folder for said scripts. Assets are auxiliary files that are necessary for data analysis, but are not derived directly from the MRI data themselves. Examples of assets include fMRI log files, MNI templates, corpora, and the like. Assets are stored in subject-specific subfolders, which in turn contain assets required for both the PE and quickread pipelines. Some assets are provided in the OSF repo, but where possible they are generated as part of the analysis pipeline. If you notice that any assets are missing, contact lyam.bailey@dal.ca or aaron.newman@dal.ca
 
