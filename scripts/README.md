@@ -25,7 +25,7 @@ Version #'s indicate the versions with which this code was developed. The code m
   - scipy 1.5.2 (https://scipy.org/)
   - wordkit 4.3.3 (https://github.com/clips/wordkit)
     
-- shell
+- bash
   - GNUparallel (https://www.gnu.org/software/parallel/)
  
 - Surf Ice (https://www.nitrc.org/projects/surfice/)
