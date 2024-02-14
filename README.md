@@ -12,6 +12,6 @@ This project uses the following directory structure. All folders described below
 
 `MRIanalyses`: Contains all assets required for the analysis scripts stored in `scripts`. This folder also serves as the main output folder for said scripts. Assets are auxiliary files that are necessary for data analysis, but are not derived directly from the MRI data themselves. Examples of assets include fMRI log files, MNI templates, corpora, and the like. Assets are stored in subject-specific subfolders, which in turn contain assets required for both the PE and quickread pipelines. Some assets are provided in the OSF repo, but where possible they are generated as part of the analysis pipeline. If you notice that any assets are missing, contact lyam.bailey@dal.ca or aaron.newman@dal.ca. **This folder is included in the OSF repository.**
 
-`behavioural_data`: Contains raw behavioural data acquired during fMRI scanning, from twelve subjects who consented to their anonymized data being made publicly accessible. Note that the subfolders `fMRI_runs1` and `fMRI_runs2` pertain to the PE and quickread experiments respectively. **This folder is included in this repository.**
+`behavioural_data`: Contains raw behavioural data acquired during fMRI scanning, from twelve subjects who consented to their anonymized data being made publicly accessible. Note that the subfolders `fMRI_runs1` and `fMRI_runs2` pertain to the PE and quickread experiments respectively. **This folder is included in the OSF repository.**
 
 [1]: https://doi.org/10.1016/j.bandc.2021.105757
