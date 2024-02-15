@@ -28,5 +28,8 @@ Version #'s indicate the versions with which this code was developed. The code m
 - bash
   - GNUparallel (https://www.gnu.org/software/parallel/)
  
+- R 4.0.4 (dependencies not included in the base installation are listed below):
+-   ggplot2 (https://cran.r-project.org/web/packages/ggplot2/index.html
+ 
 - Surf Ice (https://www.nitrc.org/projects/surfice/)
 - MRIcroGL (https://www.nitrc.org/projects/mricrogl)
