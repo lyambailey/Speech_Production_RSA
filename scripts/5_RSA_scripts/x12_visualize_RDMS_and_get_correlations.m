@@ -21,9 +21,11 @@ subject_id='subject-001';
 % -------------------------------------------------------------------------
 % IMPORTANT: if you want to calculate between-model correlations, set
 % condition='alltrials' - this will pull the exemplar models containing all
-% stimuli, regardless of condition. 
-condition='alltrials';
+% stimuli, regardless of condition. Otherwise, choose 'aloud' or 'silent'
+% for a representative model actually used by RSA
 % -------------------------------------------------------------------------
+
+condition='alltrials';
 
 model_path = fullfile(assets_path, subject_id, 'RSA_models', 'quickread');
 
