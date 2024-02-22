@@ -15,10 +15,10 @@ Version #'s indicate the versions with which this code was developed. The code m
   - bayesFactor (https://github.com/klabhub/bayesFactor)
     
 - Python 3 (dependencies not included in the base installation are listed below):
-  - corpustools v1.4.0 (https://phonologicalcorpustools.github.io/CorpusTools/)
-  - gensim v4.0.1 (https://pypi.org/project/gensim/)
-  - imageio v2.9.0 (https://pypi.org/project/imageio/)
-  - numpy v2.21.5 (https://numpy.org/)
+  - corpustools 1.4.0 (https://phonologicalcorpustools.github.io/CorpusTools/)
+  - gensim 4.0.1 (https://pypi.org/project/gensim/)
+  - imageio 2.9.0 (https://pypi.org/project/imageio/)
+  - numpy 2.21.5 (https://numpy.org/)
   - pandas 1.1.3 (https://pandas.pydata.org/)
   - pattern 3.6 (https://github.com/clips/pattern)
   - pillow 8.0.1 (https://pypi.org/project/pillow/)
@@ -29,8 +29,10 @@ Version #'s indicate the versions with which this code was developed. The code m
   - GNUparallel (https://www.gnu.org/software/parallel/)
  
 - R 4.0.4 (dependencies not included in the base installation are listed below):
-  - ggplot2 (https://cran.r-project.org/web/packages/ggplot2/index.html
-  - 
+  - bayesFactor 4.4 (https://richarddmorey.github.io/BayesFactor/)
+  - ggplot2 3.3.3 (https://cran.r-project.org/web/packages/ggplot2/index.html)
+  - dplyr 1.0.4 (https://dplyr.tidyverse.org/)
+  - Rmisc 1.5.1 (https://cran.r-project.org/package=Rmisc)
  
 - Surf Ice (https://www.nitrc.org/projects/surfice/)
 - MRIcroGL (https://www.nitrc.org/projects/mricrogl)
