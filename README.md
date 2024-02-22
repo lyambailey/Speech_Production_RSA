@@ -1,7 +1,7 @@
 # Project description 
 This GitHub repository contains code used for an fMRI study of the production effect, conducted at Dalhousie University between November 2021 and March 2022. This code is intended to be used in conjunction with data and assets from the same study, stored in [a companion OSF repository][1]. If you download all the data (stored on OSF) and all the scripts (stored here), and arrange the folders into the directory structure described below, you should be able to run all the analyses as intended.
 
-This study involved two experiments, which were dubbed _PE_ and _quickread_ respectively. PE is short for "production effect"; this experiment was a modified version of the paradigm from [Bailey et al. (2021)][2], specifically intended for multivariate analysis. The quickread experiment was a shortened version of the study phase from the PE experiment with more rapid trial presentation. These two experiments are related; however, data from each has been analyzed and written up independently. At present, we have performed RSA (representational similarity analysis) on the quickread data, the results are reported here: [insert link]. We have performed PaSTA (pattern similarity and transformation analyses) on the PE data, results reported here: [insert link].
+This study involved two experiments, which were dubbed _PE_ and _quickread_ respectively. PE is short for "production effect"; this experiment was a modified version of the paradigm from [Bailey et al. (2021)][2], specifically intended for multivariate analysis. The quickread experiment was a shortened version of the study phase from the PE experiment with more rapid trial presentation. These two experiments are related; however, data from each has been analyzed and written up independently. At present, we have performed RSA (representational similarity analysis) on the quickread data, the results of which are reported in [this preprint][3]. We have performed PaSTA (pattern similarity and transformation analyses) on the PE data, results reported here: [insert link].
 
 # Directory structure
 This project uses the following directory structure. All folders described below should be downloaded (either from this repo or from OSF) and placed within a single directory.
@@ -16,3 +16,4 @@ This project uses the following directory structure. All folders described below
 
 [1]: https://osf.io/czb26/?view_only=86a66caf1d71484d8ef0293cfa2371df
 [2]: https://doi.org/10.1016/j.bandc.2021.105757
+[3]: https://www.biorxiv.org/content/10.1101/2024.02.18.580744v1
