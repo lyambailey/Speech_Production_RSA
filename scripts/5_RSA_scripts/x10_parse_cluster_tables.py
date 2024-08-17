@@ -15,7 +15,7 @@ top_dir = open('../top_dir_linux.txt').read().replace('\n', '')
 
 # Define models and contrasts
 models = ['articulatory', 'orthographic', 'phonological', 'semantic', 'visual']
-contrasts = ['aloud-silent', 'silent-aloud']
+contrasts = ['aloud','silent','aloud-silent', 'silent-aloud']
 
 # Define paths to data
 data_dir = top_dir + '/MRIanalyses/quickread/group_level_output/RSA_output/1_tables_and_figures'
@@ -58,28 +58,41 @@ for model in models:
         # come from). For example, atlasquery uses "Temporal_Fusiform_Cortexanterior_division", 
         # while the anatomical volumes use "Temporal_Fusiform_Cortex_anterior". To fix this, we need 
         # to manually change the affected COG labels to match the anatomical labels.
+        df['COG label'] = df['COG label'].str.replace("Gyrustemporooccipital_part", "Gyrus_temporooccipital")
         df['COG label'] = df['COG label'].str.replace("Cortexanterior_division", "Cortex_anterior")
         df['COG label'] = df['COG label'].str.replace("Cortexposterior_division", "Cortex_posterior")
+        df['COG label'] = df['COG label'].str.replace("Gyrusposterior_division", "Gyrus_posterior")
+        df['COG label'] = df['COG label'].str.replace("Gyrusanterior_division", "Gyrus_anterior")
         df['COG label'] = df['COG label'].str.replace("Cortexinferior_division", "Cortex_inferior")
         df['COG label'] = df['COG label'].str.replace("Cortexsuperior_division", "Cortex_superior")
         df['COG label'] = df['COG label'].str.replace("Gyruspars_opercularis", "Gyrus_pars_opercularis")
         df['COG label'] = df['COG label'].str.replace("Gyruspars_triangularis", "Gyrus_pars_triangularis")
-
+    
+        
         # Note that we must use regex=False for strings containing parentheses)
         df['COG label'] = df['COG label'].str.replace(
             'Juxtapositional_Lobule_Cortex_(formerly_Supplementary_Motor_Cortex)', 'Supplementary_Motor_Area',
             regex=False)
+        df['COG label'] = df['COG label'].str.replace("Heschl's_Gyrus_(includes_H1_and_H2)", "Heschls_Gyrus",
+            regex=False)
+
+        # Another bug: subcortical lables use Left/Right prefix, cortical use LH/RH suffix. This is already fixed
+        # for COG labels, but not anatomical labels
+        df = df.reset_index(drop=True) # Required for using df.loc
+        
+        df.loc[df['Anatomical labels'].str.contains('Left'), 
+            'Anatomical labels'] = df['Anatomical labels'].str.replace('Left_', '') + '_LH'
+        df.loc[df['Anatomical labels'].str.contains('Right'), 
+            'Anatomical labels'] = df['Anatomical labels'].str.replace('Right_', '') + '_RH'
 
 
         # If COG label does not match anatomical label, replace it with NaN
-        # (not sure why, but we first have to reset index)
-        df = df.reset_index(drop=True)
         df.loc[df['COG label'] != df['Anatomical labels'], 'COG label'] = np.nan
 
         # Replace underscores with spaces in anatomical labels
         df['Anatomical labels'] = df['Anatomical labels'].str.replace('_', ' ')
 
-        # Change hemi suffix to single-letter prefix
+        # Change hemi suffix to single-letter prefix 
         df.loc[df['Anatomical labels'].str.contains('LH'), 'Anatomical labels'] = 'L ' + df['Anatomical labels']
         df.loc[df['Anatomical labels'].str.contains('RH'), 'Anatomical labels'] = 'R ' + df['Anatomical labels']
         df['Anatomical labels'] = df['Anatomical labels'].str.replace(' LH','')

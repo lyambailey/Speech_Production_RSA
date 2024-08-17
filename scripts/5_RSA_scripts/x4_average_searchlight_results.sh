@@ -41,7 +41,7 @@ for model in ${models[@]}; do
 		# Copy to temporary output dir
 		cp ${searchlight_fns[@]} ${temp_output_dir}/
 
-		# Get list of files in new directory
+		# # Get list of files in new directory
 		readarray -t new_searchlight_fns < <(find ${temp_output_dir} -name ${pattern})
 
 		# Average files together. Ordinarily we'd do this by adding a bunch of files
@@ -64,11 +64,12 @@ for model in ${models[@]}; do
 
 		eval $add_command
 
-		# # Now divide the resultant image by the number of input files
+
+		# # # Now divide the resultant image by the number of input files
 		n_searchlights=${#new_searchlight_fns[@]}
 		fslmaths ${average_fn} -div ${n_searchlights} ${average_fn}
 
-		# Remove the individual searchlight files
+		# # Remove the individual searchlight files
 		rm ${temp_output_dir}/subject-*
 
 		# Finally, move the newly-created average searchlight file to the appropraite

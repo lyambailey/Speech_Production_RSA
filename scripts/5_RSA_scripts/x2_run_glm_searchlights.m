@@ -189,7 +189,7 @@ for i_sub=1:numel(subjects)
             this_model_label = this_model_results.sa.models{1};
 
             % Save to disk
-            this_fn = fullfile(out_path, sprintf('%s_%s_%s_searchlight_results_testing_func.nii.gz', subject_id, condition, this_model_label));
+            this_fn = fullfile(out_path, sprintf('%s_%s_%s_searchlight_results.nii.gz', subject_id, condition, this_model_label));
 
             cosmo_map2fmri(this_model_results, this_fn);
 
