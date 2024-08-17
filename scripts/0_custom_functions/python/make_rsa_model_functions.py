@@ -44,6 +44,10 @@ import PIL
 from PIL import Image, ImageDraw, ImageFont
 from imageio import imread
 
+# NEW Dependencies for acoustic distance (modified function from Bartelds, 2020;
+# stored in the same folder as this script)
+from acoustic_distance import acoustic_distance
+
 ############################################################
 # Import assets for specific functions
 ############################################################
@@ -53,14 +57,14 @@ corpus_path = os.path.join(assets_dir, 'corpora_and_models', 'iphod_corpus')
 mycorpus=load_binary(corpus_path)
 mycontext=BaseCorpusContext(mycorpus, sequence_type='transcription', type_or_token='type')
 
-# Grapheme-to-phoneme consistency values (Obtained from Chee et al., 2020) for phonological measure
-g_to_p_values_fname = os.path.join(assets_dir, 'grapheme_to_phoneme_consistency_norms', 'quickread_words_alphabetical_consistency.csv')
-gpvs = pd.read_csv(g_to_p_values_fname, sep=',', usecols = ['WORD', 'O', 'N', 'C'])  # The remaining columns are combinations of O,N,C and not really useful to us
-
 # Pre-made word2vec model, for semantic measure
 sem_model_fname = os.path.join(assets_dir, 'corpora_and_models', 'SEMmodel_glove-wiki-gigaword-300.model')
 sem_model = gensim.models.keyedvectors.KeyedVectors.load(sem_model_fname)
 
+# List of speakers and path to audio recordings for phonological (acoustic) distance.
+acoust_path = os.path.join(top_dir, 'MRIanalyses', 'assets', 'word_audio_recordings')
+voices = ['vol1', 'vol2', 'vol3', 'vol4','vol5','vol6',
+            'ai_Clara_f_CAN', 'ai_Liam_m_CAN', 'ai_Jenny_f_USA', 'ai_Davis_m_USA']
 
 ############################################################
 # Define custom functions for constructing hypothesis matrices
@@ -140,36 +144,66 @@ def make_orthographic_matrix(word_list):
 
     return df
 
-# Phonological (euclidean distance of G2P consistency vectors)
+# Phonological (acoustic distance)
 def make_phonological_matrix(word_list):
-
-    # Ensure word list is sorted alphabetically
     word_list_sorted = sorted(word_list)
 
     # Arrange list of words into all possible pairs
     pairs = list(itertools.permutations(word_list_sorted, 2))
 
-    # Define an empty matrix, containing a row/column for ever word
-    matrix=pd.DataFrame(index=word_list_sorted, columns=word_list_sorted)
+    # Use the following if you want all combinations with replacement (useful for comparing similarity of 2 sets)
+    # pairs = list(itertools.combinations_with_replacement(word_list_sorted, 2))
 
-    for pair in pairs:
+    # Create an empty list that will house matrices computed from each volunteer
+    acoustic_matrices = []
 
-        # Define each word in the pair
-        w1 = pair[0]
-        w2 = pair[1]
+    # Loop through volunteers
+    for voice in voices:
 
-        # Get vector for each word
-        w1_vec = gpvs.loc[gpvs['WORD'].isin([w1])].iloc[0][1:]
-        w2_vec = gpvs.loc[gpvs['WORD'].isin([w2])].iloc[0][1:]
+        # Define two empty matrices, containing a row/column for ever word
+        matrix_1=pd.DataFrame(index=word_list_sorted, columns=word_list_sorted)
+        matrix_2=pd.DataFrame(index=word_list_sorted, columns=word_list_sorted)
 
-        # Treat values for O,N,C as a vector and compute euclidean distance
-        distance = spatial.distance.euclidean(w1_vec, w2_vec)
+        # We have 2 sets of words for each volunteer (except vol6). So, we'll compute a DSM for each set.
+        for s in [1, 2]:
 
-        # Insert the distance value into the corresponding row/column
-        matrix.loc[matrix.index==pair[0], matrix.columns==pair[1]]=distance
+            # Ai voices and vol6 only have 1 recording each
+            if s==2 and voice in ['ai_Clara_f_CAN', 'ai_Liam_m_CAN', 'ai_Jenny_f_USA', 'ai_Davis_m_USA', 'vol6']:
+                continue
 
-        # Finally, enter zeros along the diagonal
-        matrix.loc[matrix.index==pair[0], matrix.columns==pair[0]]=0
+            # Call the matrix for this set
+            matrix = eval('matrix_%s' %s)
+
+            # Loop through word pairs
+            for pair in pairs:
+
+                # Define each word in the pair
+                w1 = pair[0]
+                w2 = pair[1]
+
+                # Call path to audio files for this set
+                file_path = os.path.join(acoust_path, voice, 'auto_find_labels')
+
+                # Define the audio file for each word in the pair
+                file1 = os.path.join(file_path, w1 + str(s) + '.wav')
+                file2 = os.path.join(file_path, w2 + str(s) + '.wav')
+
+                # Compute acoustic distance
+                distance = acoustic_distance(file1, file2)
+
+                # Insert the distance value into the corresponding row/column
+                matrix.loc[matrix.index==pair[0], matrix.columns==pair[1]]=distance
+
+                # Enter zero on the diagonal
+                matrix.loc[matrix.index==pair[0], matrix.columns==pair[0]]=0
+
+            # Append matrix to list of matrices
+            acoustic_matrices.append(matrix.to_numpy())
+
+    # Compute the average of all acoustic matrices and convert to a pandas DataFrame
+    matrix = pd.DataFrame(np.average(acoustic_matrices, axis=0),
+                    columns = word_list_sorted, index = word_list_sorted)
+
 
     return matrix
 
@@ -261,6 +295,220 @@ def make_visual_matrix(word_list):
     df = pd.DataFrame(data=matrix, index=word_list_sorted, columns=word_list_sorted)
 
     return df
+
+
+############################################################
+# Define functions for posisble confounding properties
+############################################################
+
+# Import assets...
+
+# Concreteness ratings (from Brysbaert et al., 2014)
+conc_fname = os.path.join(assets_dir, 'Brysbaert_et_al_2014_concreteness_ratings.csv')
+conc = pd.read_csv(conc_fname)[['Word', 'Conc.M']]
+conc = conc.rename(columns={'Word': 'WORD', 'Conc.M': 'RATING'})
+
+# Grapheme-to-phoneme consistency values (Obtained from Chee et al., 2020) for G2P measure measure
+g_to_p_values_fname = os.path.join(assets_dir, 'grapheme_to_phoneme_consistency_norms', 'quickread_words_alphabetical_consistency.csv')
+gpvs = pd.read_csv(g_to_p_values_fname, sep=',', usecols = ['WORD', 'O', 'N', 'C'])  # The remaining columns are combinations of O,N,C and not really useful to us
+
+# Imageability ratings (from Scott et al., 2019)
+imag_fname = os.path.join(assets_dir, 'Scott_et_al_2019_imageability_ratings.csv')
+imag = pd.read_csv(imag_fname, sep=',', usecols=['Words', 'IMAG'])
+imag = imag.rename(columns={'Words': 'WORD', 'IMAG': 'RATING'})
+
+# Morphological complexity (N morphemes)
+morph_fname = os.path.join(assets_dir, 'quickread_words_morphemes.csv')
+morph = pd.read_csv(morph_fname)[['WORD', 'N_MORPHEMES']]
+morph = morph.rename(columns={'WORD': 'WORD', 'N_MORPHEMES': 'RATING'})
+
+# Syntactic category (noun only = 0, noun and verb = 1)
+nounverb_fname = os.path.join(assets_dir, 'quickread_words_noun_or_verb.csv')
+nounverb = pd.read_csv(nounverb_fname)
+
+
+# Define functions...
+
+# Concereteness (absolute difference in concreteness ratings)
+def make_conc_matrix(word_list):
+
+    # Define df as conc (pd dataframe containing concreteness ratings)
+    df = conc.copy()
+
+    # Ensure word list is sorted alphabetically
+    word_list_sorted = sorted(word_list)
+
+    # Arrange list of words into all possible pairs
+    pairs = list(itertools.permutations(word_list_sorted, 2))
+
+    # Define an empty matrix, containing a row/column for ever word
+    matrix=pd.DataFrame(index=word_list_sorted, columns=word_list_sorted)
+
+    for pair in pairs:
+
+        # Define each word in the pair
+        w1 = pair[0]
+        w2 = pair[1]
+
+        # Get rating for each word
+        w1_rating = df.loc[df['WORD'] == w1, 'RATING'].iloc[0]
+        w2_rating = df.loc[df['WORD'] == w2, 'RATING'].iloc[0]
+
+        # Compute distance as absolute difference in ratings
+        distance = abs(w1_rating - w2_rating)
+
+        # Insert the distance value into the corresponding row/column
+        matrix.loc[matrix.index==pair[0], matrix.columns==pair[1]]=distance
+
+        # Finally, enter zeros along the diagonal
+        matrix.loc[matrix.index==pair[0], matrix.columns==pair[0]]=0
+
+    return matrix
+
+# Grapheme-to-phoneme consistency (euclidean distance of G2P vectors)
+def make_g2p_matrix(word_list):
+
+    # Ensure word list is sorted alphabetically
+    word_list_sorted = sorted(word_list)
+
+    # Arrange list of words into all possible pairs
+    pairs = list(itertools.permutations(word_list_sorted, 2))
+
+    # Define an empty matrix, containing a row/column for ever word
+    matrix=pd.DataFrame(index=word_list_sorted, columns=word_list_sorted)
+
+    for pair in pairs:
+
+        # Define each word in the pair
+        w1 = pair[0]
+        w2 = pair[1]
+
+        # Get vector for each word
+        w1_vec = gpvs.loc[gpvs['WORD'].isin([w1])].iloc[0][1:]
+        w2_vec = gpvs.loc[gpvs['WORD'].isin([w2])].iloc[0][1:]
+
+        # Treat values for O,N,C as a vector and compute euclidean distance
+        distance = spatial.distance.euclidean(w1_vec, w2_vec)
+
+        # Insert the distance value into the corresponding row/column
+        matrix.loc[matrix.index==pair[0], matrix.columns==pair[1]]=distance
+
+        # Finally, enter zeros along the diagonal
+        matrix.loc[matrix.index==pair[0], matrix.columns==pair[0]]=0
+
+    return matrix
+
+# Imageability (absolute difference in imageability ratings)
+def make_imag_matrix(word_list):
+
+    # Remove the following words (ratings are not provided for these words in Scott et al.)
+    rm_words = ['account', 'campaign', 'century', 'department', 'journey', 'painting', 'powder', 'turnip']
+
+    # Ensure the word list is sorted alphabetically
+    word_list_sorted = sorted([i for i in word_list if i not in rm_words])
+
+    # Define df as imag (pd dataframe containing imageability ratings)
+    df = imag.copy()
+
+    # Arrange list of words into all possible pairs
+    pairs = list(itertools.permutations(word_list_sorted, 2))
+
+    # Define an empty matrix, containing a row/column for ever word
+    matrix=pd.DataFrame(index=word_list_sorted, columns=word_list_sorted)
+
+    for pair in pairs:
+
+        # Define each word in the pair
+        w1 = pair[0]
+        w2 = pair[1]
+
+        # Get rating for each word - note that these have to be converted to float
+        w1_rating = float(df.loc[df['WORD'] == w1, 'RATING'].iloc[0])
+        w2_rating = float(df.loc[df['WORD'] == w2, 'RATING'].iloc[0])
+
+        # Compute distance as absolute difference in ratings
+        distance = abs(w1_rating - w2_rating)
+
+        # Insert the distance value into the corresponding row/column
+        matrix.loc[matrix.index==pair[0], matrix.columns==pair[1]]=distance
+
+        # Finally, enter zeros along the diagonal
+        matrix.loc[matrix.index==pair[0], matrix.columns==pair[0]]=0
+
+    return matrix
+
+
+# Morphological complexity (absolute difference in number of morphemes)
+def make_morph_matrix(word_list):
+
+    # Define df as morph (pd dataframe containing N morphemes)
+    df = morph.copy()
+
+    # Ensure word list is sorted alphabetically
+    word_list_sorted = sorted(word_list)
+
+    # Arrange list of words into all possible pairs
+    pairs = list(itertools.permutations(word_list_sorted, 2))
+
+    # Define an empty matrix, containing a row/column for ever word
+    matrix=pd.DataFrame(index=word_list_sorted, columns=word_list_sorted)
+
+    for pair in pairs:
+
+        # Define each word in the pair
+        w1 = pair[0]
+        w2 = pair[1]
+
+        # Get N morphemes for each word
+        w1_rating = df.loc[df['WORD'] == w1, 'RATING'].iloc[0]
+        w2_rating = df.loc[df['WORD'] == w2, 'RATING'].iloc[0]
+
+        # Compute distance as absolute difference in ratings
+        distance = abs(w1_rating - w2_rating)
+
+        # Insert the distance value into the corresponding row/column
+        matrix.loc[matrix.index==pair[0], matrix.columns==pair[1]]=distance
+
+        # Finally, enter zeros along the diagonal
+        matrix.loc[matrix.index==pair[0], matrix.columns==pair[0]]=0
+
+    return matrix
+
+# Syntactic category (absolute difference between 0 (noun only) and 1 (noun and verb) )
+def make_nounverb_matrix(word_list):
+
+    # Define df as nounverb morph (pd dataframe containing binary noun-verb assignments)
+    df = nounverb.copy()
+
+    # Ensure word list is sorted alphabetically
+    word_list_sorted = sorted(word_list)
+
+    # Arrange list of words into all possible pairs
+    pairs = list(itertools.permutations(word_list_sorted, 2))
+
+    # Define an empty matrix, containing a row/column for ever word
+    matrix=pd.DataFrame(index=word_list_sorted, columns=word_list_sorted)
+
+    for pair in pairs:
+
+        # Define each word in the pair
+        w1 = pair[0]
+        w2 = pair[1]
+
+        # Get N morphemes for each word
+        w1_rating = df.loc[df['WORD'] == w1, 'RATING'].iloc[0]
+        w2_rating = df.loc[df['WORD'] == w2, 'RATING'].iloc[0]
+
+        # Compute distance as absolute difference in ratings
+        distance = abs(w1_rating - w2_rating)
+
+        # Insert the distance value into the corresponding row/column
+        matrix.loc[matrix.index==pair[0], matrix.columns==pair[1]]=distance
+
+        # Finally, enter zeros along the diagonal
+        matrix.loc[matrix.index==pair[0], matrix.columns==pair[0]]=0
+
+    return matrix
 
 # Word length (absolute difference in word length)
 def make_wordlength_matrix(word_list):
