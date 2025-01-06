@@ -1,5 +1,5 @@
 # Project description 
-This GitHub repository contains code used for an fMRI study reported [here][0]. This code is intended to be used in conjunction with data and assets from the same study, stored in [a companion OSF repository][1]. If you download the relevant files (stored on OSF) and scripts (stored here), and arrange the folders into the directory structure described below, you should be able to run all the analyses as intended.
+This GitHub repository contains code used for an fMRI study reported [here][1]. This code is intended to be used in conjunction with data and assets stored in [a companion OSF repository][2]. If you download the relevant files (stored on OSF) and scripts (stored here), and arrange the folders into the directory structure described below, you should be able to run all the analyses as intended.
 
 # Directory structure
 This project uses the following directory structure. All folders described below should be downloaded (either from this repo or from OSF) and placed within a single directory.
@@ -12,7 +12,5 @@ This project uses the following directory structure. All folders described below
 
 `behavioural_data`: Contains raw behavioural data acquired during fMRI scanning, from twelve subjects who consented to their anonymized data being made publicly accessible. **This folder is included in the OSF repository.**
 
-[0]: https://direct.mit.edu/imag/article/doi/10.1162/imag_a_00428/125638/Differential-weighting-of-information-during-aloud
-[1]: https://osf.io/czb26/?view_only=86a66caf1d71484d8ef0293cfa2371df
-[2]: https://doi.org/10.1016/j.bandc.2021.105757
-[4]: https://biorxiv.org/cgi/content/short/2024.02.20.581164v1
+[1]: https://direct.mit.edu/imag/article/doi/10.1162/imag_a_00428/125638/Differential-weighting-of-information-during-aloud
+[2]: https://osf.io/czb26/?view_only=86a66caf1d71484d8ef0293cfa2371df
