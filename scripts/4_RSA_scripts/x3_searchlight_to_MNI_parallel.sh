@@ -178,14 +178,14 @@ done # subjects
 n_cores="$(($( nproc )-1))"
 
 # First do highres -> example_func
-# echo "Computing highres -> example_func transforms..."
-# ls ${design_dir}/*_highres2example_func.txt | parallel --jobs ${n_cores} eval \
-#     > ${temp_log} 2>&1 # this line prints output to a temporary txt file instead of terminal
+echo "Computing highres -> example_func transforms..."
+ls ${design_dir}/*_highres2example_func.txt | parallel --jobs ${n_cores} eval \
+    > ${temp_log} 2>&1 # this line prints output to a temporary txt file instead of terminal
 
 # # Next do standard template -> highres
-# echo "Computing standard -> highres transforms..."
-# ls ${design_dir}/*_standard2highres.txt | parallel --jobs ${n_cores} eval \
-#     > ${temp_log} 2>&1 # this line prints output to a temporary txt file instead of terminal
+echo "Computing standard -> highres transforms..."
+ls ${design_dir}/*_standard2highres.txt | parallel --jobs ${n_cores} eval \
+    > ${temp_log} 2>&1 # this line prints output to a temporary txt file instead of terminal
 
 # Finally, combine the two *inverse* transforms and apply them to the searchlight maps
 echo "Applying transforms to searchlight maps..."
