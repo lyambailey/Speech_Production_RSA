@@ -53,7 +53,7 @@ for subj in subjects:
         os.remove(fname)
 
     # Functionals
-    func_labels = ['Study_1', 'Study_2', 'Test', 'Quick_Read_1', 'Quick_Read_2', 'Quick_Read_3', 'Quick_Read_4']
+    func_labels = ['Quick_Read_1', 'Quick_Read_2', 'Quick_Read_3', 'Quick_Read_4']
 
 
     for func in func_labels:
