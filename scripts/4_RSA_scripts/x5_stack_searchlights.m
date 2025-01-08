@@ -4,22 +4,6 @@
 % searchight results into a single dataset. This produces a single
 % 'stacked' dataset per condition and hypothesis model.
 
-% I know this seems a _little_ redundant (why not simply read in each
-% subject's data individually in the next script?). The reason is that
-% loading data from every subject takes time, so I created this script to
-% help with debugging further down the pipeline (it's easier to debug
-% something when you dont have to wait 20 minutes for the script to read in
-% data before it hits an error!).
-
-% I figure that if you're still reading comments this far down the
-% pipeline, you are probably pretty meticulous. So, as a thank you for
-% continuing to read my long and rambling code, here's a joke: 
-
-% A woman sends her husband, who is a programmer, to the shops. She says
-% "Get some milk. If they have eggs, get half a dozen". The man returns
-% with six jugs of milk.
-
-% You're welcome. 
 
 % -------------------------------------------------------------------------
 
